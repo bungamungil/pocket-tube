@@ -20,10 +20,13 @@ import id.bungamungil.pockettube.MainView
 import id.bungamungil.pockettube.R
 import id.bungamungil.pockettube.databinding.FragmentCreateDownloadBinding
 import id.bungamungil.pockettube.feature.read_qrcode.QrCodeScannerFragment
+import id.bungamungil.pockettube.util.convertDateFormat
 import id.bungamungil.pockettube.util.loadImageFromRemote
+import id.bungamungil.pockettube.util.onlyVisibleWhenHasText
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
+import java.util.Date
 
 
 class CreateDownloadFragment : Fragment(), TextView.OnEditorActionListener {
@@ -99,6 +102,9 @@ class CreateDownloadFragment : Fragment(), TextView.OnEditorActionListener {
         binding.layoutVideoInfo.visibility = View.VISIBLE
         binding.imageVideoThumbnail.loadImageFromRemote(videoInfo.thumbnail)
         binding.labelVideoTitle.text = videoInfo.title
+        binding.labelVideoExtractor.onlyVisibleWhenHasText(videoInfo.extractor)
+        binding.labelVideoUploadedDate.onlyVisibleWhenHasText(videoInfo.uploadDate?.convertDateFormat("yyyyMMdd", "dd MMM yyyy"))
+        binding.labelVideoUploader.onlyVisibleWhenHasText(videoInfo.uploader)
     }
 
     private fun videoInfoFailedToRetrieve(reason: Throwable, url: String) {

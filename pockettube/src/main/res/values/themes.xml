@@ -20,4 +20,9 @@
     <style name="VideoThumbnailImage">
         <item name="cornerSize">24dp</item>
     </style>
+
+    <style name="ChipText" parent="TextAppearance.MaterialComponents.Chip">
+        <item name="android:textSize">11sp</item>
+        <item name="android:fontFamily">@font/quicksand_medium</item>
+    </style>
 </resources>

@@ -10,11 +10,15 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
         android:fitsSystemWindows="true">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
+            app:titleTextColor="@color/white"
+            app:navigationIconTint="@color/white"
+            android:theme="@style/Theme.Pockettube.Toolbar"
             android:layout_height="?attr/actionBarSize" />
 
     </com.google.android.material.appbar.AppBarLayout>

@@ -72,13 +72,16 @@
             app:layout_constraintTop_toBottomOf="@id/layout_input_url"
             app:layout_constraintVertical_bias="0.0" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/button_download"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="24dp"
             android:layout_marginBottom="24dp"
-            android:enabled="false"
+            android:enabled="true"
+            android:padding="12dp"
+            android:textAppearance="?attr/textAppearanceLabelLarge"
+            style="@style/Widget.Material3.Button"
             android:text="Download"
             app:layout_constraintBottom_toBottomOf="parent" />
 

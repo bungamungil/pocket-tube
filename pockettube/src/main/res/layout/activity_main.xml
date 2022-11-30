@@ -17,6 +17,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:theme="@style/Theme.Pockettube.Toolbar"
+            app:titleTextAppearance="@style/Theme.Pockettube.Toolbar.TextAppearance"
             android:layout_height="?attr/actionBarSize" />
 
     </com.google.android.material.appbar.AppBarLayout>

@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.yausername.youtubedl_android.BuildConfig
 import com.yausername.youtubedl_android.YoutubeDL
+import com.yausername.youtubedl_android.mapper.VideoFormat
 import com.yausername.youtubedl_android.mapper.VideoInfo
 import id.bungamungil.pockettube.MainView
 import id.bungamungil.pockettube.R
@@ -26,7 +27,6 @@ import id.bungamungil.pockettube.util.onlyVisibleWhenHasText
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
-import java.util.Date
 
 
 class CreateDownloadFragment : Fragment(), TextView.OnEditorActionListener {
@@ -94,17 +94,22 @@ class CreateDownloadFragment : Fragment(), TextView.OnEditorActionListener {
     private fun videoInfoRetrieved(videoInfo: VideoInfo) {
         binding.widgetProgressFetchVideoInfo.visibility = View.GONE
         mainView?.showDownloadButton()
-        if (videoInfo.requestedFormats != null) {
-            binding.widgetDownloadOptions.adapter = FormatDownloadAdapter(videoInfo.requestedFormats)
-            binding.widgetDownloadOptions.layoutManager = LinearLayoutManager(context)
-            binding.widgetDownloadOptions.visibility = View.VISIBLE
-        }
         binding.layoutVideoInfo.visibility = View.VISIBLE
         binding.imageVideoThumbnail.loadImageFromRemote(videoInfo.thumbnail)
         binding.labelVideoTitle.text = videoInfo.title
         binding.labelVideoExtractor.onlyVisibleWhenHasText(videoInfo.extractor)
         binding.labelVideoUploadedDate.onlyVisibleWhenHasText(videoInfo.uploadDate?.convertDateFormat("yyyyMMdd", "dd MMM yyyy"))
         binding.labelVideoUploader.onlyVisibleWhenHasText(videoInfo.uploader)
+        Single.fromCallable { mergeFormatInfo(videoInfo) }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { formats ->
+                binding.widgetDownloadOptions.apply {
+                    adapter = FormatDownloadAdapter(formats)
+                    layoutManager = LinearLayoutManager(context)
+                    visibility = View.VISIBLE
+                }
+            }
     }
 
     private fun videoInfoFailedToRetrieve(reason: Throwable, url: String) {
@@ -114,6 +119,19 @@ class CreateDownloadFragment : Fragment(), TextView.OnEditorActionListener {
             Log.e("video-info", message, reason)
         }
         Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
+    }
+
+    private fun mergeFormatInfo(videoInfo: VideoInfo) : List<VideoFormat> {
+        val result = arrayListOf<VideoFormat>()
+        if (videoInfo.requestedFormats != null) {
+            result.addAll(videoInfo.requestedFormats)
+            result.sortedBy { it.width }
+        }
+        val preferredFormat = videoInfo.formats?.firstOrNull { it.formatId == videoInfo.formatId }
+        if (preferredFormat != null) {
+            result.add(preferredFormat)
+        }
+        return result
     }
 
 }

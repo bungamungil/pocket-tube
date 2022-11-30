@@ -20,6 +20,7 @@ import id.bungamungil.pockettube.MainView
 import id.bungamungil.pockettube.R
 import id.bungamungil.pockettube.databinding.FragmentCreateDownloadBinding
 import id.bungamungil.pockettube.feature.read_qrcode.QrCodeScannerFragment
+import id.bungamungil.pockettube.util.loadImageFromRemote
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -95,6 +96,9 @@ class CreateDownloadFragment : Fragment(), TextView.OnEditorActionListener {
             binding.widgetDownloadOptions.layoutManager = LinearLayoutManager(context)
             binding.widgetDownloadOptions.visibility = View.VISIBLE
         }
+        binding.layoutVideoInfo.visibility = View.VISIBLE
+        binding.imageVideoThumbnail.loadImageFromRemote(videoInfo.thumbnail)
+        binding.labelVideoTitle.text = videoInfo.title
     }
 
     private fun videoInfoFailedToRetrieve(reason: Throwable, url: String) {

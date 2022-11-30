@@ -16,4 +16,8 @@
         <item name="android:fontFamily">@font/quicksand_bold</item>
         <item name="android:textSize">24sp</item>
     </style>
+
+    <style name="VideoThumbnailImage">
+        <item name="cornerSize">24dp</item>
+    </style>
 </resources>

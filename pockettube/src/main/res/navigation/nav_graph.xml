@@ -8,12 +8,16 @@
     <fragment
         android:id="@+id/CreateDownload"
         android:name="id.bungamungil.pockettube.feature.create_download.CreateDownloadFragment"
-        android:label="@string/first_fragment_label"
+        android:label="Create Download"
         tools:layout="@layout/fragment_create_download">
 
         <action
-            android:id="@+id/action_FirstFragment_to_SecondFragment"
-            app:destination="@id/SecondFragment" />
+            android:id="@+id/action_CreateDownload_to_ScanQr"
+            app:destination="@id/ScanQr"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popEnterAnim="@anim/nav_slide_in_left" />
     </fragment>
     <fragment
         android:id="@+id/SecondFragment"
@@ -24,5 +28,12 @@
         <action
             android:id="@+id/action_SecondFragment_to_FirstFragment"
             app:destination="@id/CreateDownload" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/ScanQr"
+        android:name="id.bungamungil.pockettube.feature.read_qrcode.QrCodeScannerFragment"
+        android:label="Scan QR"
+        tools:layout="@layout/fragment_qr_code_scanner">
     </fragment>
 </navigation>

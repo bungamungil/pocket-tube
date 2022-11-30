@@ -9,12 +9,16 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.yausername.youtubedl_android.BuildConfig
 import com.yausername.youtubedl_android.YoutubeDL
 import com.yausername.youtubedl_android.mapper.VideoInfo
+import id.bungamungil.pockettube.R
 import id.bungamungil.pockettube.databinding.FragmentCreateDownloadBinding
+import id.bungamungil.pockettube.feature.read_qrcode.QrCodeScannerFragment
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -36,7 +40,15 @@ class CreateDownloadFragment : Fragment(), TextView.OnEditorActionListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setFragmentResultListener(QrCodeScannerFragment.SCAN_QR_REQUEST) { _, bundle ->
+            val result = bundle.getString(QrCodeScannerFragment.SCAN_QR_RESULT)!!
+            binding.inputUrl.setText(result)
+            inputUrlCompleted(result)
+        }
         binding.inputUrl.setOnEditorActionListener(this)
+        binding.buttonScanQr.setOnClickListener {
+            findNavController().navigate(R.id.action_CreateDownload_to_ScanQr)
+        }
     }
 
     override fun onEditorAction(textView: TextView?, actionId: Int, keyEvent: KeyEvent?): Boolean {

@@ -11,12 +11,19 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <View
+            android:layout_width="match_parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/layout_input_url"
+            android:background="@drawable/top_rectangle"
+            android:layout_marginBottom="-32dp"
+            android:layout_height="0dp"/>
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/layout_input_url"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="24dp"
-            android:layout_marginTop="24dp"
             android:hint="URL"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -78,7 +85,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="24dp"
             android:layout_marginBottom="24dp"
-            android:enabled="true"
+            android:enabled="false"
             android:padding="12dp"
             android:textAppearance="?attr/textAppearanceLabelLarge"
             style="@style/Widget.Material3.Button"

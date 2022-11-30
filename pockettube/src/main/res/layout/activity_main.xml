@@ -16,8 +16,6 @@
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            app:titleTextColor="@color/white"
-            app:navigationIconTint="@color/white"
             android:theme="@style/Theme.Pockettube.Toolbar"
             android:layout_height="?attr/actionBarSize" />
 

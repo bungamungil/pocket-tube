@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.yausername.youtubedl_android.BuildConfig
 import com.yausername.youtubedl_android.YoutubeDL
@@ -55,17 +56,31 @@ class CreateDownloadFragment : Fragment(), TextView.OnEditorActionListener {
         Single.fromCallable { YoutubeDL.getInstance().getInfo(url) }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe {
+                binding.widgetProgressFetchVideoInfo.visibility = View.VISIBLE
+                binding.widgetDownloadOptions.visibility = View.GONE
+            }
             .subscribe(this::videoInfoRetrieved) { reason ->
-                val message = "Failed to retrieve video info from $url"
-                if (BuildConfig.DEBUG) {
-                    Log.e("video-info", message, reason)
-                }
-                Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
+                this.videoInfoFailedToRetrieve(reason, url)
             }
     }
 
     private fun videoInfoRetrieved(videoInfo: VideoInfo) {
-        Log.i("video-info", videoInfo.toString())
+        binding.widgetProgressFetchVideoInfo.visibility = View.GONE
+        if (videoInfo.requestedFormats != null) {
+            binding.widgetDownloadOptions.adapter = FormatDownloadAdapter(videoInfo.requestedFormats)
+            binding.widgetDownloadOptions.layoutManager = LinearLayoutManager(context)
+            binding.widgetDownloadOptions.visibility = View.VISIBLE
+        }
+    }
+
+    private fun videoInfoFailedToRetrieve(reason: Throwable, url: String) {
+        binding.widgetProgressFetchVideoInfo.visibility = View.GONE
+        val message = "Failed to retrieve video info from $url"
+        if (BuildConfig.DEBUG) {
+            Log.e("video-info", message, reason)
+        }
+        Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
     }
 
 }

@@ -16,6 +16,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.yausername.youtubedl_android.BuildConfig
 import com.yausername.youtubedl_android.YoutubeDL
 import com.yausername.youtubedl_android.mapper.VideoInfo
+import id.bungamungil.pockettube.MainView
 import id.bungamungil.pockettube.R
 import id.bungamungil.pockettube.databinding.FragmentCreateDownloadBinding
 import id.bungamungil.pockettube.feature.read_qrcode.QrCodeScannerFragment
@@ -29,6 +30,8 @@ class CreateDownloadFragment : Fragment(), TextView.OnEditorActionListener {
     private var _binding: FragmentCreateDownloadBinding? = null
 
     private val binding get() = _binding!!
+
+    private val mainView get() = activity as? MainView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,6 +51,13 @@ class CreateDownloadFragment : Fragment(), TextView.OnEditorActionListener {
         binding.inputUrl.setOnEditorActionListener(this)
         binding.buttonScanQr.setOnClickListener {
             findNavController().navigate(R.id.action_CreateDownload_to_ScanQr)
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mainView?.apply {
+            hideDownloadButton()
         }
     }
 
@@ -79,6 +89,7 @@ class CreateDownloadFragment : Fragment(), TextView.OnEditorActionListener {
 
     private fun videoInfoRetrieved(videoInfo: VideoInfo) {
         binding.widgetProgressFetchVideoInfo.visibility = View.GONE
+        mainView?.showDownloadButton()
         if (videoInfo.requestedFormats != null) {
             binding.widgetDownloadOptions.adapter = FormatDownloadAdapter(videoInfo.requestedFormats)
             binding.widgetDownloadOptions.layoutManager = LinearLayoutManager(context)

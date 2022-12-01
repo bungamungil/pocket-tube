@@ -1,10 +1,14 @@
 package id.bungamungil.pockettube
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.navigation.findNavController
@@ -64,13 +68,17 @@ class MainActivity : AppCompatActivity(), MainView {
 
     override fun showDownloadButton(videoInfo: VideoInfo) {
         binding.fab.setOnClickListener {
-            val intent = Intent(this, DownloadService::class.java)
-            intent.putExtra(DownloadCallable.DOWNLOAD_URL, videoInfo.webpageUrl)
-            intent.putExtra(DownloadCallable.DOWNLOAD_FORMAT, videoInfo.formatId)
-            intent.putExtra(DownloadCallable.DOWNLOAD_NAME, "${videoInfo.extractor}-${videoInfo.id}")
-            intent.putExtra(DownloadCallable.DOWNLOAD_ID, DownloadService.counter)
-            intent.putExtra(DownloadCallable.DOWNLOAD_DISPLAY_NAME, videoInfo.title)
-            ContextCompat.startForegroundService(this, intent)
+            if (isStoragePermissionGranted()) {
+                val intent = Intent(this, DownloadService::class.java)
+                intent.putExtra(DownloadCallable.DOWNLOAD_URL, videoInfo.webpageUrl)
+                intent.putExtra(DownloadCallable.DOWNLOAD_FORMAT, videoInfo.formatId)
+                intent.putExtra(DownloadCallable.DOWNLOAD_NAME, "${videoInfo.extractor}-${videoInfo.id}")
+                intent.putExtra(DownloadCallable.DOWNLOAD_ID, DownloadService.counter)
+                intent.putExtra(DownloadCallable.DOWNLOAD_DISPLAY_NAME, videoInfo.title)
+                intent.putExtra(DownloadCallable.DOWNLOAD_FILE_NAME, videoInfo.title)
+                intent.putExtra(DownloadCallable.DOWNLOAD_FILE_EXTENSION, videoInfo.ext)
+                ContextCompat.startForegroundService(this, intent)
+            }
         }
         binding.fab.show()
     }
@@ -78,6 +86,18 @@ class MainActivity : AppCompatActivity(), MainView {
     override fun hideDownloadButton() {
         binding.fab.setOnClickListener(null)
         binding.fab.hide()
+    }
+
+    private fun isStoragePermissionGranted(): Boolean {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            return if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                true
+            } else {
+                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
+                false
+            }
+        }
+        return true
     }
 
 }

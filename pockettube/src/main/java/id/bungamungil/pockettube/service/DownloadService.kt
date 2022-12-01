@@ -40,7 +40,7 @@ class DownloadService: Service() {
                 val notification = createNotificationBuilder()
                     .setContentText("Download is on progress")
                     .setContentTitle("Downloading $displayName, eta ${etaInSeconds}s ...")
-                    .setProgress(100, progress.toInt(), true)
+                    .setProgress(100, progress.toInt(), false)
                     .setSmallIcon(R.drawable.download)
                 startForeground(downloadId, notification.build())
             }

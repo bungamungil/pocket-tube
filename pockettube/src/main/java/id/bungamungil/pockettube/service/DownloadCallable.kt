@@ -47,8 +47,7 @@ class DownloadCallable(private val context: Context, private val intent: Intent,
     }
 
     private fun getDownloadLocation(): File {
-        val downloadsDir =
-            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+        val downloadsDir = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
         val youtubeDLDir = File(downloadsDir, context.getString(R.string.app_name))
         if (!youtubeDLDir.exists()) youtubeDLDir.mkdir()
         return youtubeDLDir

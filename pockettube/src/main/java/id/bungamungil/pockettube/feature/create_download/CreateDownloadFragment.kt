@@ -93,7 +93,7 @@ class CreateDownloadFragment : Fragment(), TextView.OnEditorActionListener {
 
     private fun videoInfoRetrieved(videoInfo: VideoInfo) {
         binding.widgetProgressFetchVideoInfo.visibility = View.GONE
-        mainView?.showDownloadButton()
+        mainView?.showDownloadButton(videoInfo)
         binding.layoutVideoInfo.visibility = View.VISIBLE
         binding.imageVideoThumbnail.loadImageFromRemote(videoInfo.thumbnail)
         binding.labelVideoTitle.text = videoInfo.title

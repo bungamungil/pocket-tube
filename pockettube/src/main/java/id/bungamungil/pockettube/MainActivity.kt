@@ -11,7 +11,9 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
+import com.yausername.youtubedl_android.mapper.VideoInfo
 import id.bungamungil.pockettube.databinding.ActivityMainBinding
+import id.bungamungil.pockettube.service.DownloadCallable
 import id.bungamungil.pockettube.service.DownloadService
 
 class MainActivity : AppCompatActivity(), MainView {
@@ -60,11 +62,22 @@ class MainActivity : AppCompatActivity(), MainView {
                 || super.onSupportNavigateUp()
     }
 
-    override fun showDownloadButton() {
+    override fun showDownloadButton(videoInfo: VideoInfo) {
+        binding.fab.setOnClickListener {
+            val intent = Intent(this, DownloadService::class.java)
+            intent.putExtra(DownloadCallable.DOWNLOAD_URL, videoInfo.webpageUrl)
+            intent.putExtra(DownloadCallable.DOWNLOAD_FORMAT, videoInfo.formatId)
+            intent.putExtra(DownloadCallable.DOWNLOAD_NAME, "${videoInfo.extractor}-${videoInfo.id}")
+            intent.putExtra(DownloadCallable.DOWNLOAD_ID, DownloadService.counter)
+            intent.putExtra(DownloadCallable.DOWNLOAD_DISPLAY_NAME, videoInfo.title)
+            ContextCompat.startForegroundService(this, intent)
+        }
         binding.fab.show()
     }
 
     override fun hideDownloadButton() {
+        binding.fab.setOnClickListener(null)
         binding.fab.hide()
     }
+
 }

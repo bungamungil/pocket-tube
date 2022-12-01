@@ -1,15 +1,18 @@
 package id.bungamungil.pockettube
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import id.bungamungil.pockettube.databinding.ActivityMainBinding
+import id.bungamungil.pockettube.service.DownloadService
 
 class MainActivity : AppCompatActivity(), MainView {
 
@@ -28,6 +31,11 @@ class MainActivity : AppCompatActivity(), MainView {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)
+
+        binding.fab.setOnClickListener {
+            val serviceIntent = Intent(this, DownloadService::class.java)
+            ContextCompat.startForegroundService(this, serviceIntent)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

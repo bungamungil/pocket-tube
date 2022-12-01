@@ -1,11 +1,13 @@
 package id.bungamungil.pockettube
 
 import android.app.Application
+import android.os.Build
 import android.util.Log
 import android.widget.Toast
 import com.yausername.aria2c.Aria2c
 import com.yausername.ffmpeg.FFmpeg
 import com.yausername.youtubedl_android.YoutubeDL
+import id.bungamungil.pockettube.service.NotificationChannels
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.CompletableObserver
@@ -16,6 +18,7 @@ class PocketTubeApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        registerNotificationChannels()
         Completable.fromAction(this::initLibraries)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -50,6 +53,12 @@ class PocketTubeApp : Application() {
             "Initialization failed: " + reason.localizedMessage,
             Toast.LENGTH_SHORT
         ).show()
+    }
+
+    private fun registerNotificationChannels() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannels.registerAll(this)
+        }
     }
 
 }
